@@ -1,0 +1,37 @@
+.guessInput {
+  width: 70%;
+  height: auto;
+  margin: 1rem;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #f1faee;
+  background-color: transparent;
+  color: #f1faee;
+  padding: 0.5rem 0.75rem;
+  font-size: 1.3rem;
+  text-align: center;
+  outline: none;
+}
+
+.correctGuess {
+  border-bottom-color: #06d6a0;
+  color: #06d6a0;
+}
+
+
+.failedGuess{
+  border-bottom-color: #ef233c;
+  color: #ef233c;
+}
+
+.correctAnswer {
+  color: #06d6a0;
+  font-size: 1.3rem;
+}
+
+@media only screen and (max-width: 945px){
+  .correctAnswer {
+    font-size: 0.85rem;
+  }
+}

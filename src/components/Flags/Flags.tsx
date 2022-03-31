@@ -6,7 +6,8 @@ import axios, {AxiosResponse} from "axios";
 
 // Components
 import { Flag } from "../Flag/Flag";
-import { GenerateFlag } from "../GenerateFlag";
+import { GuessFlag } from "../GuessFlag";
+
 // Helpers
 import { getRandomNumberProps } from "./FlagsHelper";
 
@@ -15,11 +16,16 @@ import styles from "./Flags.module.css";
 
 export const Flags: FC = (): ReactElement => {
   const [flagsCodes, setFlagsCodes] = useState<Array<string>>([]);
-  const [flag, setFlag] = useState<string>("");
+  const [allFlags, setAllFlags] = useState<any>({});
+  const [flag, setFlag] = useState<Array<string>>([]);
   // Get all the available flags codes in api
+  // assign a random county code to flag variable
   useEffect(() => {
     // get flags codes when component is mounting
     axios.get('https://flagcdn.com/en/codes.json').then((response: AxiosResponse) => {
+      // assign body of response (which is an object)
+      // to allFlags variable
+      setAllFlags(response.data);
       // get keys of object that is returned
       let entries = [];
       for (let value of Object.keys(response.data)){
@@ -29,7 +35,9 @@ export const Flags: FC = (): ReactElement => {
       setFlagsCodes(entries);
       // set flag
       const randomNumber = Math.floor(Math.random() * entries.length + 1);
-      setFlag(`https://flagcdn.com/${entries[randomNumber]}.svg`); 
+      const randomCountryFlag = entries[randomNumber];
+      const randomCountryName = response.data[randomCountryFlag];
+      setFlag([`https://flagcdn.com/${randomCountryFlag}.svg`, randomCountryName]); 
     })
   }, [])
 
@@ -39,13 +47,15 @@ export const Flags: FC = (): ReactElement => {
   }
   const getRandomCode = () => {
     const randomNumber = getRandomNumber({length: flagsCodes.length});
-    const flagImageUrl = `https://flagcdn.com/${flagsCodes[randomNumber]}.svg`;
-    setFlag(flagImageUrl);
+    const randomCountryCode = flagsCodes[randomNumber];
+    const flagImageUrl = `https://flagcdn.com/${randomCountryCode}.svg`;
+    setFlag([flagImageUrl, allFlags[randomCountryCode]]);
   }
 
+
   return <div className={styles.flagsContainer}>
-    <Flag flag={flag} />
-    <GenerateFlag onClick={getRandomCode}/>
+    <Flag flag={flag[0]} />
+    <GuessFlag country={flag[1]} changeFlag={getRandomCode}/>
   </div>
 }
 
